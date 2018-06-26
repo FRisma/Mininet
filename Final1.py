@@ -51,10 +51,10 @@ def myNetwork():
     sld1_e3 = net.addSwitch('sld1_e3', cls=OVSKernelSwitch, failMode='standalone')
 
     info( '*** Add hosts\n')
-    h1_e3 = net.addHost('h1_e3', cls=Host, ip='10.0.0.3', defaultRoute=None)
-    h1_d1 = net.addHost('h1_d1', cls=Host, ip='10.0.0.4', defaultRoute=None)
-    h1_e2 = net.addHost('h1_e2', cls=Host, ip='10.0.0.2', defaultRoute=None)
-    h1_e1 = net.addHost('h1_e1', cls=Host, ip='10.0.0.1', defaultRoute=None)
+    h1_d1 = net.addHost('h1_e3', cls=Host, ip='10.0.0.95/8', defaultRoute=None)
+    h1_e1 = net.addHost('h1_e1', cls=Host, ip='192.168.0.1/24', defaultRoute=None)
+    h1_e2 = net.addHost('h1_e2', cls=Host, ip='192.168.0.1/24', defaultRoute=None)
+    h1_e3 = net.addHost('h1_d1', cls=Host, ip='192.168.0.1/24', defaultRoute=None)
 
     info( '*** Add links\n')
     net.addLink(rcentral, swd1)
@@ -105,6 +105,8 @@ def myNetwork():
     net.get('swd1').start([])
 
     info( '*** Post configure switches and hosts\n')
+    h1_e1.cmd('ip route add default via 192.168.0.254 ')
+    net['h1_e2'].cmd('ip route add 10.0.1.0/24 via 192.168.100.1')
 
     CLI(net)
     net.stop()
